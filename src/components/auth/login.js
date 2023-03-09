@@ -46,40 +46,55 @@ export default function SignIn() {
       return;
     }
     console.log(data.get("email"), data.get("password"));
-    try {
-      const promise = appwriteConfig.createEmailSession(
-        data.get("email"),
-        data.get("password")
-      );
-      // console.log(promise);
+    const promise = appwriteConfig.createEmailSession(
+      data.get("email"),
+      data.get("password")
+    );
 
-      promise.then(
-        function(response) {
-          if (response.status === 201) {
-            swal("Success!", "You have successfully logged in", "success");
-            // localStorage.setItem("session", response);
-            window.location.href = "/dashboard";
-            console.log(response); // Success
-          } else {
-            swal("Oops!", "Please enter valid email and password", "error");
-          }
-        },
-        function(error) {
-          console.log(error); // Failure
-        }
-      );
-      // const res = appwriteConfig.createEmailSession(data.get('email'), data.get('password'));
-      // if(res.status === 201){
-      //   swal("Success!",'You have successfully logged in', "success");
-      //   localStorage.setItem('session',res);
-      //   window.location.href = '/dashboard';
-      // }else{
-      //   swal("Oops!",'Please enter valid email and password', "error");
-      // }
-    } catch (err) {
-      console.log(err);
-      swal("Oops!", "Please enter valid email and password", "error");
-    }
+    promise.then(
+      function(response) {
+        console.log(response); // Success
+        console.log(response.status);
+        console.log("login success");
+      },
+      function(error) {
+        console.log(error); // Failure
+      }
+    );
+    // try {
+    //   const promise = appwriteConfig.createEmailSession(
+    //     data.get("email"),
+    //     data.get("password")
+    //   );
+    //   // console.log(promise);
+
+    //   promise.then(
+    //     function(response) {
+    //       if (response.status === 201) {
+    //         swal("Success!", "You have successfully logged in", "success");
+    //         // localStorage.setItem("session", response);
+    //         window.location.href = "/dashboard";
+    //         console.log(response); // Success
+    //       } else {
+    //         swal("Oops!", "Please enter valid email and password", "error");
+    //       }
+    //     },
+    //     function(error) {
+    //       console.log(error); // Failure
+    //     }
+    //   );
+    //   // const res = appwriteConfig.createEmailSession(data.get('email'), data.get('password'));
+    //   // if(res.status === 201){
+    //   //   swal("Success!",'You have successfully logged in', "success");
+    //   //   localStorage.setItem('session',res);
+    //   //   window.location.href = '/dashboard';
+    //   // }else{
+    //   //   swal("Oops!",'Please enter valid email and password', "error");
+    //   // }
+    // } catch (err) {
+    //   console.log(err);
+    //   swal("Oops!", "Please enter valid email and password", "error");
+    // }
   };
 
   return (
@@ -148,7 +163,7 @@ export default function SignIn() {
               </Grid>
               <Grid item>
                 <NavLink to="/register" variant="body2">
-                  {"Don't have an appwriteConfig? Sign Up"}
+                  {"Don't have an account? Sign Up"}
                 </NavLink>
               </Grid>
             </Grid>
