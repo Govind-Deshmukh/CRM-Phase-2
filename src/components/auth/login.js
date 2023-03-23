@@ -16,7 +16,9 @@ import { NavLink } from "react-router-dom";
 
 import appwriteConfig from "./services/appwriteConfig";
 import swal from "sweetalert";
-import { PlaylistAddCheckCircleRounded } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
+const history = useNavigate();
+
 function Copyright(props) {
   return (
     <Typography
@@ -38,63 +40,17 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if (data.get("email") === "" || data.get("password") === "") {
-      swal("Oops!", "Please enter valid email and password!", "error");
-      return;
+
+  const loginUser = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    try {
+      await appwriteConfig.createSession(data.get("email"), data.get("password"));
+      history.push("/dashboard");
+    } catch (error) {
+      swal("Error", error.message, "error");
+
     }
-    console.log(data.get("email"), data.get("password"));
-    const promise = appwriteConfig.createEmailSession(
-      data.get("email"),
-      data.get("password")
-    );
-
-    promise.then(
-      function(response) {
-        console.log(response); // Success
-        console.log(response.status);
-        console.log("login success");
-      },
-      function(error) {
-        console.log(error); // Failure
-      }
-    );
-    // try {
-    //   const promise = appwriteConfig.createEmailSession(
-    //     data.get("email"),
-    //     data.get("password")
-    //   );
-    //   // console.log(promise);
-
-    //   promise.then(
-    //     function(response) {
-    //       if (response.status === 201) {
-    //         swal("Success!", "You have successfully logged in", "success");
-    //         // localStorage.setItem("session", response);
-    //         window.location.href = "/dashboard";
-    //         console.log(response); // Success
-    //       } else {
-    //         swal("Oops!", "Please enter valid email and password", "error");
-    //       }
-    //     },
-    //     function(error) {
-    //       console.log(error); // Failure
-    //     }
-    //   );
-    //   // const res = appwriteConfig.createEmailSession(data.get('email'), data.get('password'));
-    //   // if(res.status === 201){
-    //   //   swal("Success!",'You have successfully logged in', "success");
-    //   //   localStorage.setItem('session',res);
-    //   //   window.location.href = '/dashboard';
-    //   // }else{
-    //   //   swal("Oops!",'Please enter valid email and password', "error");
-    //   // }
-    // } catch (err) {
-    //   console.log(err);
-    //   swal("Oops!", "Please enter valid email and password", "error");
-    // }
   };
 
   return (
@@ -119,7 +75,7 @@ export default function SignIn() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={loginUser}
             noValidate
             sx={{ mt: 1 }}
           >
