@@ -13,11 +13,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import appwriteConfig from "./services/appwriteConfig";
+import account from "../services/appwriteConfig";
 import swal from "sweetalert";
-import { useNavigate } from 'react-router-dom';
-const history = useNavigate();
 
 function Copyright(props) {
   return (
@@ -40,17 +39,28 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
 
   const loginUser = async (e) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    try {
-      await appwriteConfig.createSession(data.get("email"), data.get("password"));
-      history.push("/dashboard");
-    } catch (error) {
-      swal("Error", error.message, "error");
 
-    }
+    const data = new FormData(e.currentTarget);
+
+    const promise = account.createEmailSession(
+      data.get("email"),
+      data.get("password")
+    );
+
+    promise.then(
+      function(response) {
+        console.log(response); // Success
+        navigate("/dashboard");
+      },
+      function(error) {
+        console.log(error); // Failure
+        swal("Oops!", "Something went wrong!", "error");
+      }
+    );
   };
 
   return (
@@ -73,12 +83,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={loginUser}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={loginUser} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required

@@ -14,6 +14,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import account from "../services/appwriteConfig";
 import swal from "sweetalert";
 
@@ -37,31 +39,52 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Forgot() {
-  const handleSubmit = (event) => {
+export default function ResetPass() {
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setConfPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit1 = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get("email");
+    const pass = password;
+    if (pass !== passwordConfirm) {
+      swal("Error", "Passwords do not match", "error");
+      return;
+    } else {
+      handleSubmit2(event, pass);
+    }
+  };
 
-    const promise = account.createRecovery(
-      email,
-      "http://localhost:3000/reset-password"
-    );
-
-    promise.then(
-      function(response) {
-        console.log(response); // Success
-        swal(
-          "Success",
-          "Check your email for a password reset link",
-          "success"
-        );
-      },
-      function(error) {
-        console.log(error); // Failure
-        swal("Error", "Email is not registered on website", "error");
-      }
-    );
+  const handleSubmit2 = (event, password) => {
+    event.preventDefault();
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get("userId");
+      const secret = urlParams.get("secret");
+      const newPass = password;
+      const promise = account.updateRecovery(userId, secret, newPass, newPass);
+      promise.then(
+        function(response) {
+          console.log(response);
+          swal("Success", "Password reset successful", "success").then(() => {
+            navigate("/login");
+          });
+        },
+        function(error) {
+          console.log(error);
+          swal("Error", "Password reset failed", "error").then(() => {
+            navigate("/login");
+          });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      swal(
+        "Error",
+        "Password reset failed please use link sent to mail",
+        "error"
+      );
+    }
   };
 
   return (
@@ -86,7 +109,7 @@ export default function Forgot() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit1}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -94,11 +117,27 @@ export default function Forgot() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="passwordConfirm"
+              label="Confirm Password"
+              type="password"
+              id="passwordConfirm"
+              autoComplete="current-password"
+              onChange={(e) => {
+                setConfPassword(e.target.value);
+              }}
             />
 
             <Button

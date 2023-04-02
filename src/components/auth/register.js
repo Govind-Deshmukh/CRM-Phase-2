@@ -1,86 +1,91 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
 // import FormControlLabel from '@mui/material/FormControlLabel';
 // import Checkbox from '@mui/material/Checkbox';
 // import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 // import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {NavLink} from 'react-router-dom';
-import swal from 'sweetalert';
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NavLink } from "react-router-dom";
+import swal from "sweetalert";
 import { ID } from "appwrite";
 
-import appwriteConfig from './services/appwriteConfig';
-
-
-
+import account from "../services/appwriteConfig";
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
       <NavLink color="inherit" to="/">
-      MAKEaNOTE
-      </NavLink>{' '}
+        MAKEaNOTE
+      </NavLink>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
 const theme = createTheme();
 
-
 export default function SignUp() {
   const signupUser = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (data.get('email') === '' || data.get('password') === '') {
-      swal("Oops!", 'Please enter valid email and password!', "error");
+    if (data.get("email") === "" || data.get("password") === "") {
+      swal("Oops!", "Please enter valid email and password!", "error");
       return;
     }
-    if (data.get('password').length < 8) {
-      swal("Oops!",'Password must be at least 8 characters', "warning");
+    if (data.get("password").length < 8) {
+      swal("Oops!", "Password must be at least 8 characters", "warning");
       return;
     }
-    if (data.get('number') === ''|| data.get('number').length < 10){
-      swal("Oops!",'Please enter your contact number correctly', "error");
+    if (data.get("number") === "" || data.get("number").length < 10) {
+      swal("Oops!", "Please enter your contact number correctly", "error");
       return;
     }
     const user = {
-      email: data.get('email'),
-      password: data.get('password'),
-      name: data.get('firstName') + ' ' + data.get('lastName'),
-      number: "+91"+data.get('number'),
+      email: data.get("email"),
+      password: data.get("password"),
+      name: data.get("firstName") + " " + data.get("lastName"),
+      number: "+91" + data.get("number"),
     };
 
-    try{
-      appwriteConfig.create(ID.unique(), user.email, user.password, user.name, user.number).then(
-        (response) => {
-          console.log(response);
-        swal('Success','Account created successfully & verification mail sent','Success').then(() => {
-          // link to login page
-          
-          window.location.href = '/login';
-        });
-          
-        },
-        (error) => {
-          console.log(error);
-          swal('Error','Account creation failed', "error");
-        }
-      );
-    }catch(error){
-      console.log(error);
-      swal('Error','Error connecting server','error');
-    }
+    try {
+      account
+        .create(ID.unique(), user.email, user.password, user.name, user.number)
+        .then(
+          (response) => {
+            console.log(response);
+            swal(
+              "Success",
+              "Account created successfully & verification mail sent",
+              "Success"
+            ).then(() => {
+              // link to login page
 
+              window.location.href = "/login";
+            });
+          },
+          (error) => {
+            console.log(error);
+            swal("Error", "Account creation failed", "error");
+          }
+        );
+    } catch (error) {
+      console.log(error);
+      swal("Error", "Error connecting server", "error");
+    }
   };
 
   return (
@@ -90,13 +95,15 @@ export default function SignUp() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main',fontSize:30 }}>
-          <span role="img" aria-label="logo" aria-labelledby='logo'>👀</span>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main", fontSize: 30 }}>
+            <span role="img" aria-label="logo" aria-labelledby="logo">
+              👀
+            </span>
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
