@@ -19,10 +19,7 @@ function App() {
           <Route path="/forgot" element={<Forgot />} />
           <Route path="/reset-password" element={<ResetPass />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
-          <Route
-            path="/dashboard"
-            element={validateSession ? <Dashboard /> : <Login />}
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </div>
