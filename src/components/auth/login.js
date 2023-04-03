@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import account from "../services/appwriteConfig";
 import swal from "sweetalert";
 
+import SocialLogin from "./socialLogin";
+
 function Copyright(props) {
   return (
     <Typography
@@ -127,6 +129,9 @@ export default function SignIn() {
                   {"Don't have an account? Sign Up"}
                 </NavLink>
               </Grid>
+            </Grid>
+            <Grid container className="d-flex justify-content-center m-3">
+              <SocialLogin />
             </Grid>
           </Box>
         </Box>

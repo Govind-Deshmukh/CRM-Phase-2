@@ -1,23 +1,18 @@
-import appwriteConfig from "./appwriteConfig";
+import account from "./appwriteConfig";
 import { useState } from "react";
+
 export default function validateSession() {
   const [userDetails, setUserDetails] = useState();
-
-  const promise = appwriteConfig.get();
-  promise.then(
-    function(response) {
-      console.log(response); // Success
-      setUserDetails(response);
-    },
-    function(error) {
-      console.log(error); // Failure
-      return error;
-    }
-  );
-
-  if (!userDetails) {
+  try {
+    const data = account.get();
+    setUserDetails(data);
+  } catch (error) {
+    console.log(error);
     return false;
-  } else {
+  }
+
+  if (userDetails) {
     return true;
   }
+  return false;
 }
